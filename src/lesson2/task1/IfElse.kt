@@ -91,11 +91,7 @@ fun ageDescription(age: Int) {
  * и t3 часов — со скоростью v3 км/час.
  * Определить, за какое время он одолел первую половину пути?
  */
-fun timeForHalfWay(
-    t1: Double, v1: Double,
-    t2: Double, v2: Double,
-    t3: Double, v3: Double
-): Double = TODO()
+fun timeForHalfWay(t1: Double, v1: Double, t2: Double, v2: Double, t3: Double, v3: Double): Double = TODO()
 
 /**
  * Простая (2 балла)
@@ -106,11 +102,11 @@ fun timeForHalfWay(
  * и 3, если угроза от обеих ладей.
  * Считать, что ладьи не могут загораживать друг друга
  */
-fun whichRookThreatens(
-    kingX: Int, kingY: Int,
-    rookX1: Int, rookY1: Int,
-    rookX2: Int, rookY2: Int
-): Int = TODO()
+fun whichRookThreatens(kingX: Int, kingY: Int, rookX1: Int, rookY1: Int, rookX2: Int, rookY2: Int): Int =
+    if (((rookX1 == kingX) || (rookY1 == kingY)) && ((rookX2 == kingX) || (rookY2 == kingY))) 3
+    else if (((rookX1 == kingX) || (rookY1 == kingY)) && ((rookX2 != kingX) || (rookY2 != kingY))) 1
+    else if (((rookX2 == kingX) || (rookY2 == kingY)) && ((rookX1 != kingX) || (rookY1 != kingY))) 2
+    else 0
 
 /**
  * Простая (2 балла)
@@ -122,11 +118,11 @@ fun whichRookThreatens(
  * и 3, если угроза есть и от ладьи и от слона.
  * Считать, что ладья и слон не могут загораживать друг друга.
  */
-fun rookOrBishopThreatens(
-    kingX: Int, kingY: Int,
-    rookX: Int, rookY: Int,
-    bishopX: Int, bishopY: Int
-): Int = TODO()
+fun rookOrBishopThreatens(kingX: Int, kingY: Int, rookX: Int, rookY: Int, bishopX: Int, bishopY: Int): Int =
+    if (((rookX == kingX) || (rookY == kingY)) && ((kingX - bishopX) * (kingX - bishopX) == (kingY - bishopY) * (kingY - bishopY))) 3
+    else if ((rookX == kingX) || (rookY == kingY)) 1
+    else if ((kingX - bishopX) * (kingX - bishopX) == (kingY - bishopY) * (kingY - bishopY)) 2
+    else 0
 
 /**
  * Простая (2 балла)
@@ -136,7 +132,7 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Double = TODO()
 
 /**
  * Средняя (3 балла)

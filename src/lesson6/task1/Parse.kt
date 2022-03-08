@@ -74,7 +74,28 @@ fun main() {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun monthDays(month: Int, year: Int) =
+    when {
+        (month == 2) && (year % 4 != 0 || (year % 4 == 0 && year % 100 == 0 && year % 400 != 0)) -> 28
+        month == 2 && year % 4 == 0 -> 29
+        month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12 -> 31
+        month == 4 || month == 6 || month == 9 || month == 11 -> 30
+        else -> 0
+    }
+
+fun dateStrToDigit(str: String): String {
+    val parts = str.split(" ")
+    val months = mapOf(
+        "января" to 1, "февраля" to 2, "марта" to 3, "апреля" to 4, "мая" to 5, "июня" to 6,
+        "июля" to 7, "августа" to 8, "сентября" to 9, "октября" to 10, "ноября" to 11, "декабря" to 12
+    )
+    if (parts.size != 3 || (parts[1] !in months.keys)) return ""
+    val day = parts[0].toInt()
+    val month = months[parts[1]]
+    val year = parts[2].toInt()
+    return if (day > monthDays(month!!, year) || year < 0 || day !in 1..31) ""
+    else String.format("%02d.%02d.%d", day, month, year)
+}
 
 /**
  * Средняя (4 балла)
@@ -86,7 +107,25 @@ fun dateStrToDigit(str: String): String = TODO()
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val months = mapOf(
+        "01" to "января", "02" to "февраля", "03" to "марта", "04" to "апреля", "05" to "мая",
+        "06" to "июня", "07" to "июля", "08" to "августа", "09" to "сентября", "10" to "октября", "11" to "ноября",
+        "12" to "декабря"
+    )
+    val parts = digital.split(".")
+    val reg = "[0-9]+".toRegex()
+    if (parts.size != 3 || parts[1] !in months.keys || !reg.matches(parts[0]) || !reg.matches(parts[2])
+        || parts[0].length > 2
+    ) return ""
+    val month = parts[1]
+    if (month[0] == '0') month.replace("0", "")
+    var day = parts[0]
+    if (day[0] == '0')
+        day = day[1].toString()
+    if (parts[0].toInt() > monthDays(month.toInt(), parts[2].toInt()) || parts[2].toInt() < 0) return ""
+    return String.format("%s %s %s", day, months[parts[1]], parts[2])
+}
 
 /**
  * Средняя (4 балла)
@@ -114,7 +153,20 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int {
+    val parts = jumps.split(" ").toMutableList()
+    val reg = "[-%0-9]+".toRegex()
+    for (i in parts) {
+        if (!reg.matches(i)) return -1
+    }
+    parts.removeAll { it == "-" || it == "%" }
+    var maxJump = -1
+    for (i in parts) {
+        val attempt = i.toInt()
+        if (attempt > maxJump) maxJump = attempt
+    }
+    return maxJump
+}
 
 /**
  * Сложная (6 баллов)
@@ -127,7 +179,24 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val parts = jumps.split(" ")
+    val reg = "[-+%0-9]+".toRegex()
+    for (i in parts) {
+        if (!reg.matches(i)) return -1
+    }
+    val success = mutableListOf<Int>()
+    for (i in 0..(parts.size - 2)) {
+        if ('+' in parts[i + 1])
+            success.add(parts[i].toInt())
+    }
+    var maxJump = -1
+    for (i in success.indices) {
+        if (success[i] > maxJump)
+            maxJump = success[i]
+    }
+    return maxJump
+}
 
 /**
  * Сложная (6 баллов)
@@ -138,7 +207,16 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    val reg = "( [0-9]+ [+-])+".toRegex()
+    if (!reg.matches(" $expression -")) throw IllegalArgumentException(expression)
+    val parts = expression.split(" ")
+    var result = parts[0].toInt()
+    for (i in 1 until parts.size)
+        if ((parts[i] == "+")) result += parts[i + 1].toInt()
+        else if ((parts[i] == "-")) result -= parts[i + 1].toInt()
+    return result
+}
 
 /**
  * Сложная (6 баллов)

@@ -74,7 +74,15 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    var digitCount = 0
+    var nCopy = n
+    do {
+        nCopy /= 10
+        digitCount++
+    } while (abs(nCopy) > 0)
+    return digitCount
+}
 
 /**
  * Простая (2 балла)
@@ -100,14 +108,30 @@ fun fib(n: Int): Int {
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    if (n % 2 == 0)
+        return 2
+    else
+        for (i in (3..(n / 3)) step 2)
+            if (n % i == 0)
+                return i
+    return n
+}
 
 /**
  * Простая (2 балла)
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    var maxDel = 1
+    for (i in (n / 2) downTo 1) {
+        if (n % i == 0)
+            if (i > maxDel)
+                maxDel = i
+    }
+    return maxDel
+}
 
 /**
  * Простая (2 балла)
@@ -125,7 +149,18 @@ fun maxDivisor(n: Int): Int = TODO()
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var steps = 0
+    var xCopy = x
+    while (xCopy != 1) {
+        if (xCopy % 2 == 0)
+            xCopy /= 2
+        else
+            xCopy = 3 * xCopy + 1
+        steps++
+    }
+    return steps
+}
 
 /**
  * Средняя (3 балла)
@@ -142,16 +177,18 @@ fun lcm(m: Int, n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
 
-/**
- * Средняя (3 балла)
- *
- * Для заданных чисел m и n, m <= n, определить, имеется ли хотя бы один точный квадрат между m и n,
- * то есть, существует ли такое целое k, что m <= k*k <= n.
- * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
- */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    var mCopy = m
+    var nCopy = n
+    while (mCopy != nCopy)
+        if (mCopy > nCopy)
+            mCopy -= nCopy
+        else
+            nCopy -= mCopy
+    return mCopy == 1
+}
+
 
 /**
  * Средняя (3 балла)
@@ -179,7 +216,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя (3 балла)
@@ -269,4 +306,20 @@ fun squareSequenceDigit(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var digitCount = 0
+    var count = 1
+    while (digitCount < n) {
+        digitCount += digitNumber(fib(count))
+        count++
+    }
+    count -= 1
+    val fibCount = fib(count)
+    val fibDigitCount = digitNumber(fibCount)
+    return if (digitCount == n)
+        fib(count) % 10
+    else if (digitCount - n == 1 && fibDigitCount > 2)
+        (fibCount / 10) % 10
+    else
+        ((fibCount / 10.0.pow(digitCount - n)).toInt()) % 10
+}
